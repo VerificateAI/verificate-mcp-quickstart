@@ -1,5 +1,8 @@
 # Verificate MCP — your vibe-coded MVP, all the way to production
 
+[![Verificate Gate](https://img.shields.io/badge/gated%20by-Verificate%20Gate-2ea44f?logo=shield&logoColor=white)](https://github.com/VerificateAI/verificate-gate-action)
+
+
 <p align="center">
   <img src="assets/verificate-demo.gif" alt="Verificate MCP rejecting AI-written payment code at 70, then approving the fix at 91.2 — real output from the live server" width="840">
 </p>
