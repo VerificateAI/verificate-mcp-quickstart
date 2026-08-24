@@ -16,6 +16,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-8CCB43.svg)](LICENSE)
 [![Official MCP Registry](https://img.shields.io/badge/MCP_Registry-ai.verificate%2Fmcp-blue)](https://registry.modelcontextprotocol.io/v0/servers?search=verificate)
 [![Docker MCP Registry](https://img.shields.io/badge/Docker_MCP-PR_%234551-2496ED)](https://github.com/docker/mcp-registry/pull/4551)
+[![MCP Market](https://img.shields.io/badge/MCP_Market-verificate-8A2BE2)](https://mcpmarket.com/server/verificate)
 [![Free trial](https://img.shields.io/badge/Free_trial-30_days,_no_card-8CCB43)](https://verificate.ai/auth/signup)
 
 Your coding assistant writes a mock and calls it done. It invents an SDK call that doesn't exist. It ships an N+1 loop that passes every test and dies under load. Verificate MCP runs the deep review pass on every AI output — deterministic reality gates first (any one can veto), then an enterprise-grade review scores what survives — **before the code reaches your codebase**.
