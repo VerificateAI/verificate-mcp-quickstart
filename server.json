@@ -15,8 +15,8 @@
       "url": "https://mcp.verificate.ai/mcp",
       "headers": [
         {
-          "description": "Bearer <token> — from your Verificate dashboard (30-day free trial, no card: https://verificate.ai/auth/signup)",
-          "isRequired": true,
+          "description": "Optional. Bearer <token> from your Verificate dashboard for your own quota (30-day free trial, no card: https://verificate.ai/auth/signup). Omit it to use the free tier: 25 validations, no signup.",
+          "isRequired": false,
           "isSecret": true,
           "name": "Authorization"
         }

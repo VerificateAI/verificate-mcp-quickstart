@@ -4,7 +4,7 @@
       "type": "http",
       "url": "https://mcp.verificate.ai/mcp",
       "headers": {
-        "Authorization": "Bearer ${VERIFICATE_TOKEN}"
+        "Authorization": "Bearer ${VERIFICATE_TOKEN:-}"
       }
     }
   }
