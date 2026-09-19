@@ -19,6 +19,8 @@ const GATEWAY =
   process.env.VERIFICATE_URL ||
   "https://mcp.verificate.ai/mcp";
 const TOKEN = process.env.VERIFICATE_TOKEN || "";
+// Upstream request limit (ms). Default sits above the gateway's own ~90s review deadline.
+const UPSTREAM_TIMEOUT_MS = Math.max(5000, Number(process.env.VERIFICATE_TIMEOUT_MS) || 120000);
 const VERSION = "1.8.7";
 const PROTOCOL_VERSION = "2025-06-18";
 
@@ -488,7 +490,17 @@ async function upstreamPost(body, extraHeaders = {}) {
     ...extraHeaders,
   };
   if (sessionId) headers["mcp-session-id"] = sessionId;
-  const res = await fetch(GATEWAY, { method: "POST", headers, body: JSON.stringify(body) });
+  // Bound every upstream call. The gateway caps a review at ~90s and answers "could not review" past
+  // that; without a client-side limit a stalled connection left the MCP client waiting forever.
+  let res;
+  try {
+    res = await fetch(GATEWAY, { method: "POST", headers, body: JSON.stringify(body), signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS) });
+  } catch (err) {
+    if (err && (err.name === "TimeoutError" || err.name === "AbortError")) {
+      throw new Error(`gateway did not answer within ${Math.round(UPSTREAM_TIMEOUT_MS / 1000)}s — retry, or split a large submission`);
+    }
+    throw err;
+  }
   const sid = res.headers.get("mcp-session-id");
   if (sid) sessionId = sid;
   const text = await res.text();
