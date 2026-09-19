@@ -27,9 +27,26 @@ const PROTOCOL_VERSION = "2025-06-18";
 // (Glama and others) score THESE local definitions.
 const TOOLS = [
   {
+    "name": "validate_artifact",
+    "title": "Gate a deployable artifact against the Verificate production doctrine",
+    "description": "Deterministic production-readiness gate for AI-built systems. Verifies the invariants that stop a system silently shipping broken: every critical component is PRESENT and LOADS, the import closure resolves (nothing assumed 'already on the box'), all runtime dependencies are declared, and health is a REAL fail-closed check. Returns approve/reject with a fix plan and ISO 27001 / ISO 5055 control evidence. Facts are gathered by the Verificate collector in your CI; the gate is the authority. Non-bypassable, fails closed. This is the control-plane sibling of validate_ai_output — code quality is one invariant; this gates the whole deployable.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "artifact": {
+          "type": "object",
+          "description": "Collected artifact facts: {critical_components:[{name,loads:bool}], import_closure_ok:bool, undeclared_deps:[str], health_truthful:bool}."
+        }
+      },
+      "required": [
+        "artifact"
+      ]
+    }
+  },
+  {
     "name": "validate_ai_output",
-    "title": "Gate AI-written code",
-    "description": "The merge gate for AI-written CODE: returns a binary approve/reject verdict with veto power — e.g. it rejects code calling the nonexistent stripe.Inventory API, or an N+1 loop with the latency arithmetic to prove it. Deterministic reality gates (mock/placeholder veto, gaming and bypass detection, invented-API checks) run first and cannot be overridden; a frontier-model review (ISO/IEC 25010) then scores performance, scalability, reliability and tech debt. Read-only: the code is analyzed, never executed. Call it on every AI-generated diff before accepting it; use validate_plan for plans, analyze_code for an advisory report without a verdict.",
+    "title": "Gate AI-written output (code or documents)",
+    "description": "The merge gate for ANY AI-written output — code, documentation, reports, emails, configs: returns a binary approve/reject verdict with veto power — e.g. it rejects code calling the nonexistent stripe.Inventory API, an N+1 loop with the latency arithmetic to prove it, or a doc claiming success with no evidence. Deterministic reality gates (mock/placeholder veto, gaming and bypass detection, invented-API checks) run first and cannot be overridden; a frontier-model review (ISO/IEC 25010) then scores quality, accuracy, reliability and tech debt. In a benchmark, a frontier model reviewing alone caught reward-gaming and hallucinated APIs 0/6 times in a natural review workflow; these gates catch them deterministically on every call. Read-only: nothing is executed. Call it on every AI-generated deliverable before accepting it; use validate_plan for plans, analyze_code for an advisory report without a verdict.",
     "annotations": {
       "readOnlyHint": true,
       "destructiveHint": false,
@@ -41,20 +58,19 @@ const TOOLS = [
       "properties": {
         "ai_output": {
           "type": "string",
-          "description": "The AI-generated code to gate — a diff, function or whole file. Plain source text, any mainstream language."
+          "description": "The AI-generated output to gate — source code (a diff, function or whole file, any mainstream language) or prose (documentation, a report, an email, release notes). For reliable latency keep one submission under ~15,000 characters; split larger artifacts at natural boundaries (functions, SQL statements, sections) and validate the units separately. Reviews are wall-clock bounded: an over-budget model review returns an explicit timed-out result (deterministic gates still run) rather than hanging."
         },
         "validation_type": {
           "type": "string",
           "default": "code_generation",
-          "enum": [
-            "code_generation",
-            "text"
-          ],
-          "description": "'code_generation' (default) for source code; 'text' for prose output such as documentation or commit messages."
+          "description": "What the output is: 'code_generation' (default) for source code; 'documentation', 'report', 'email', 'text', ... for prose (code-marker gates are skipped, integrity gates and the frontier review still run); 'plan' for designs/specs."
         },
         "context": {
-          "type": "object",
-          "description": "Optional review context, e.g. {\"language\": \"cpp\", \"scale\": \"10k req/s\"}. 'language' sharpens SDK-reality checks."
+          "type": [
+            "object",
+            "string"
+          ],
+          "description": "Optional review context — an object like {\"language\": \"cpp\", \"scale\": \"10k req/s\"} ('language' sharpens SDK-reality checks) or a free-text sentence describing intent."
         }
       },
       "required": [
