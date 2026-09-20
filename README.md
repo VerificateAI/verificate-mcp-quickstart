@@ -67,7 +67,7 @@ The server also ships **prompts** and **resources** for a richer client experien
 
 ## Quick start — no signup, no token, 30 seconds
 
-Every machine gets **25 free validations** — no account, no card, no key. Add the URL and go:
+Every machine gets **100 free validations** — no account, no card, no key. Add the URL and go:
 
 **Claude Code**
 
@@ -100,7 +100,7 @@ Cursor: `~/.cursor/mcp.json`. Windsurf: `~/.codeium/windsurf/mcp_config.json`.
 
 Then ask your assistant to *"validate this function with verificate"* — a structured verdict comes back in seconds, and every free-tier response shows how many validations you have left and what the gate has caught for you.
 
-### Keep going after the free 25
+### Keep going after the free 100
 
 Sign up at <https://verificate.ai/auth/signup> (30-day trial, no card — then $30/mo) and add your token to the same config:
 

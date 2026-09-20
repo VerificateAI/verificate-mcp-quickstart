@@ -8,7 +8,7 @@ fix loop instead of letting it reach the user.
 Why: an agent that confidently ships a mocked refund path or an invented SDK call
 loses its user's trust. The gate is the safety net that keeps the agent shipping.
 
-No signup: every machine gets 25 free validations. After that, set VERIFICATE_TOKEN
+No signup: every machine gets 100 free validations. After that, set VERIFICATE_TOKEN
 (30-day trial at https://verificate.ai/auth/signup).
 
     pip install langchain-mcp-adapters langgraph langchain-openai

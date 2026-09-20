@@ -11,7 +11,7 @@ pip install langchain-mcp-adapters langgraph langchain-openai
 python verificate_guardrail.py
 ```
 
-**25 free validations per machine — no signup, no token.** After that, `export VERIFICATE_TOKEN=...` (30-day trial, no card: https://verificate.ai/auth/signup).
+**100 free validations per machine — no signup, no token.** After that, `export VERIFICATE_TOKEN=...` (30-day trial, no card: https://verificate.ai/auth/signup).
 
 ## The 10-line version
 

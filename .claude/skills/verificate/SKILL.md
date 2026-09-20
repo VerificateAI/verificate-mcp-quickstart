@@ -40,7 +40,7 @@ The response contains `result.structuredContent` with `valid` (approve/reject), 
 
 ## Free tier & privacy
 
-**25 validations per machine, no signup, no card, no token.** After that, add `Authorization: Bearer <token>` (30-day trial at https://verificate.ai/auth/signup). Code is analyzed, never executed, never used to train models. Privacy: https://verificate.ai/privacy
+**100 validations per machine, no signup, no card, no token.** After that, add `Authorization: Bearer <token>` (30-day trial at https://verificate.ai/auth/signup). Code is analyzed, never executed, never used to train models. Privacy: https://verificate.ai/privacy
 
 A real rejection (verbatim): *"`stripe.Inventory.update` does not exist in the Stripe SDK — immediate AttributeError"* · *"refund path is mocked — no money moves"* · score 30/100.
 

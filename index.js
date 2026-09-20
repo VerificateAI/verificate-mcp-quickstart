@@ -485,7 +485,7 @@ async function upstreamPost(body, extraHeaders = {}) {
     "Content-Type": "application/json",
     Accept: "application/json, text/event-stream",
     // Only send auth when a token is set; without it the gateway serves the
-    // no-signup free tier (25 validations per machine) instead of rejecting.
+    // no-signup free tier (100 validations per machine) instead of rejecting.
     ...(TOKEN ? { Authorization: `Bearer ${TOKEN}` } : {}),
     ...extraHeaders,
   };
@@ -608,7 +608,7 @@ async function handle(msg) {
     }
     case "tools/call": {
       // No token? Forward anyway — the gateway grants a no-signup free tier
-      // (25 validations/machine) and, when it's used up, returns an upsell that
+      // (100 validations/machine) and, when it's used up, returns an upsell that
       // surfaces inline in the client. A token lifts the cap to the full plan.
       try {
         return send(await forwardToolCall(id, params));
