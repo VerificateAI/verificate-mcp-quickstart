@@ -1,6 +1,6 @@
 {
   "name": "verificate",
-  "version": "1.8.7",
+  "version": "1.8.8",
   "description": "Agentic code review with veto power: 17 deterministic reality gates + frontier-model deep review gate every AI-written change before it ships.",
   "author": { "name": "Verificate Pty Ltd", "url": "https://verificate.ai" },
   "homepage": "https://verificate.ai/mcp",

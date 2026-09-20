@@ -21,7 +21,7 @@ const GATEWAY =
 const TOKEN = process.env.VERIFICATE_TOKEN || "";
 // Upstream request limit (ms). Default sits above the gateway's own ~90s review deadline.
 const UPSTREAM_TIMEOUT_MS = Math.max(5000, Number(process.env.VERIFICATE_TIMEOUT_MS) || 120000);
-const VERSION = "1.8.7";
+const VERSION = "1.8.8";
 const PROTOCOL_VERSION = "2025-06-18";
 
 // Mirrored from the hosted gateway (tools/list etc.) — regenerate with
