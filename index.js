@@ -65,7 +65,7 @@ const TOOLS = [
         "validation_type": {
           "type": "string",
           "default": "code_generation",
-          "description": "What the output is: 'code_generation' (default) for source code; 'documentation', 'report', 'email', 'text', ... for prose (code-marker gates are skipped, integrity gates and the frontier review still run); 'plan' for designs/specs."
+          "description": "What the output is: 'code_generation' (default) for source code; 'documentation', 'report', 'email', 'text', ... for prose (code-marker gates are skipped, integrity gates and the frontier review still run). Use 'report' (or 'status_report' / 'handover') for anything that CLAIMS work is done or passing: there, a completion claim with no evidence in the text is a veto. 'plan' for designs/specs."
         },
         "context": {
           "type": [
