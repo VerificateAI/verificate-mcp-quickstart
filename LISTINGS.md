@@ -4,7 +4,7 @@ One source of truth for every MCP directory. When a fact below changes, update i
 listings. Form-based directories need an account login (GitHub OAuth) — paste the fields below.
 
 **Name:** Verificate Gate (MCP)
-**Tagline (short):** The merge gate for AI-written code — vetoes mocked code, invented APIs and false "it's done" claims before they ship.
+**Tagline (short):** The merge gate for AI-written code — catches mocked code, invented APIs and false "it's done" claims before they ship.
 **Category:** Developer Tools / Code Quality / Code Review / Security
 **Server type:** Remote, streamable HTTP. **No authentication needed to start** — 100 free validations, no signup. Optional `Authorization: Bearer <token>` (30-day trial, no card: https://verificate.ai/auth/signup).
 **Endpoint:** `https://mcp.verificate.ai/mcp`
@@ -18,9 +18,9 @@ listings. Form-based directories need an account login (GitHub OAuth) — paste 
 
 **Description (long):**
 Verificate Gate runs the review pass engineers still do by hand on every AI output. Deterministic reality
-gates run first and have veto power: placeholder/mock implementations presented as finished, calls to APIs
-that do not exist, reward-gamed tests, and unsupported "it's done, all tests pass" completion claims. A
-frontier-model review then grades correctness, security, performance and maintainability and returns a fix
+gates run first and have veto power: placeholder/mock implementations presented as finished, reward-gamed
+tests, and unsupported "it's done, all tests pass" completion claims. A frontier-model review then checks
+for calls to APIs that do not exist and grades correctness, security, performance and maintainability and returns a fix
 plan. If the review cannot run, the gate fails closed instead of approving. Works in Claude Code, Cursor,
 VS Code, Windsurf and any MCP client; the same engine gates pull requests through the GitHub Marketplace
 Action and LangChain/LangGraph through `verificate-langchain`.
