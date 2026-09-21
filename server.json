@@ -4,7 +4,7 @@
   "description": "Agentic code review, no signup to try: reality gates + frontier-model review, with veto.",
   "title": "Verificate MCP",
   "repository": {
-    "url": "https://github.com/Verificate-Dev/verificate-mcp-quickstart",
+    "url": "https://github.com/VerificateAI/verificate-mcp-quickstart",
     "source": "github"
   },
   "version": "1.8.8",

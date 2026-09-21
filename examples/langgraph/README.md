@@ -32,4 +32,4 @@ tools = await client.get_tools()          # validate_ai_output, validate_plan, a
 A tool an agent *may* call is one it skips under pressure. A **graph node** the output must pass through is deterministic — the veto is structural, not optional. That's the LangGraph way, and it's exactly what a veto gate needs.
 
 Privacy: code is analyzed, never executed, never trained on. https://verificate.ai/privacy
-Main repo (all clients + one-click installs): https://github.com/Verificate-Dev/verificate-mcp-quickstart
+Main repo (all clients + one-click installs): https://github.com/VerificateAI/verificate-mcp-quickstart

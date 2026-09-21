@@ -9,7 +9,7 @@
   "keywords": ["mcp", "model-context-protocol", "code-review", "validation", "ai-coding", "claude-code", "cursor", "windsurf"],
   "author": "Verificate Pty Ltd (https://verificate.ai)",
   "license": "MIT",
-  "repository": { "type": "git", "url": "https://github.com/Verificate-Dev/verificate-mcp-quickstart.git" },
+  "repository": { "type": "git", "url": "https://github.com/VerificateAI/verificate-mcp-quickstart.git" },
   "homepage": "https://verificate.ai/mcp",
   "mcpName": "ai.verificate/mcp"
 }

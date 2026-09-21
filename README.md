@@ -164,7 +164,7 @@ That second layer is the part you pay for: a frontier agent doing the deep revie
 This repo is also a runnable, zero-dependency MCP server: a stdio bridge that serves `initialize`/`tools/list` locally and forwards tool calls to the hosted gateway. Use it with clients that prefer stdio servers:
 
 ```bash
-VERIFICATE_TOKEN=<your-token> npx github:Verificate-Dev/verificate-mcp-quickstart
+VERIFICATE_TOKEN=<your-token> npx github:VerificateAI/verificate-mcp-quickstart
 ```
 
 Or with Docker:
