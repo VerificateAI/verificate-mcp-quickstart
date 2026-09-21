@@ -2,9 +2,18 @@
   "name": "verificate",
   "version": "1.8.8",
   "description": "Agentic code review with veto power: 17 deterministic reality gates + frontier-model deep review gate every AI-written change before it ships.",
-  "author": { "name": "Verificate Pty Ltd", "url": "https://verificate.ai" },
-  "homepage": "https://verificate.ai/mcp",
+  "author": {
+    "name": "Verificate Pty Ltd",
+    "url": "https://verificate.ai"
+  },
+  "homepage": "https://verificate.ai/gate/",
   "repository": "https://github.com/VerificateAI/verificate-mcp-quickstart",
   "license": "MIT",
-  "keywords": ["code-review", "validation", "mcp", "quality-gate", "ai-coding"]
+  "keywords": [
+    "code-review",
+    "validation",
+    "mcp",
+    "quality-gate",
+    "ai-coding"
+  ]
 }

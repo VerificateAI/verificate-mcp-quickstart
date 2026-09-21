@@ -21,7 +21,7 @@ const GATEWAY =
 const TOKEN = process.env.VERIFICATE_TOKEN || "";
 // Upstream request limit (ms). Default sits above the gateway's own ~90s review deadline.
 const UPSTREAM_TIMEOUT_MS = Math.max(5000, Number(process.env.VERIFICATE_TIMEOUT_MS) || 120000);
-const VERSION = "1.8.7";
+const VERSION = "1.8.8";
 const PROTOCOL_VERSION = "2025-06-18";
 
 // Mirrored from the hosted gateway (tools/list etc.) — regenerate with
@@ -65,7 +65,7 @@ const TOOLS = [
         "validation_type": {
           "type": "string",
           "default": "code_generation",
-          "description": "What the output is: 'code_generation' (default) for source code; 'documentation', 'report', 'email', 'text', ... for prose (code-marker gates are skipped, integrity gates and the frontier review still run); 'plan' for designs/specs."
+          "description": "What the output is: 'code_generation' (default) for source code; 'documentation', 'report', 'email', 'text', ... for prose (code-marker gates are skipped, integrity gates and the frontier review still run). Use 'report' (or 'status_report' / 'handover') for anything that CLAIMS work is done or passing: there, a completion claim with no evidence in the text is a veto. 'plan' for designs/specs."
         },
         "context": {
           "type": [
@@ -485,7 +485,7 @@ async function upstreamPost(body, extraHeaders = {}) {
     "Content-Type": "application/json",
     Accept: "application/json, text/event-stream",
     // Only send auth when a token is set; without it the gateway serves the
-    // no-signup free tier (25 validations per machine) instead of rejecting.
+    // no-signup free tier (100 validations per machine) instead of rejecting.
     ...(TOKEN ? { Authorization: `Bearer ${TOKEN}` } : {}),
     ...extraHeaders,
   };
@@ -608,7 +608,7 @@ async function handle(msg) {
     }
     case "tools/call": {
       // No token? Forward anyway — the gateway grants a no-signup free tier
-      // (25 validations/machine) and, when it's used up, returns an upsell that
+      // (100 validations/machine) and, when it's used up, returns an upsell that
       // surfaces inline in the client. A token lifts the cap to the full plan.
       try {
         return send(await forwardToolCall(id, params));

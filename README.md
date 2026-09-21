@@ -67,12 +67,19 @@ The server also ships **prompts** and **resources** for a richer client experien
 
 ## Quick start — no signup, no token, 30 seconds
 
-Every machine gets **25 free validations** — no account, no card, no key. Add the URL and go:
+Every machine gets **100 free validations** — no account, no card, no key. Add the URL and go:
 
 **Claude Code**
 
 ```bash
 claude mcp add --transport http verificate https://mcp.verificate.ai/mcp
+```
+
+Or install it as a **Claude Code plugin** (adds the MCP server *and* the `verificate` skill, so Claude gates its own work before presenting it):
+
+```
+/plugin marketplace add VerificateAI/verificate-mcp-quickstart
+/plugin install verificate@verificate
 ```
 
 **Cursor / VS Code — one-click install:**
@@ -100,7 +107,7 @@ Cursor: `~/.cursor/mcp.json`. Windsurf: `~/.codeium/windsurf/mcp_config.json`.
 
 Then ask your assistant to *"validate this function with verificate"* — a structured verdict comes back in seconds, and every free-tier response shows how many validations you have left and what the gate has caught for you.
 
-### Keep going after the free 25
+### Keep going after the free 100
 
 Sign up at <https://verificate.ai/auth/signup> (30-day trial, no card — then $30/mo) and add your token to the same config:
 
@@ -164,7 +171,7 @@ That second layer is the part you pay for: a frontier agent doing the deep revie
 This repo is also a runnable, zero-dependency MCP server: a stdio bridge that serves `initialize`/`tools/list` locally and forwards tool calls to the hosted gateway. Use it with clients that prefer stdio servers:
 
 ```bash
-VERIFICATE_TOKEN=<your-token> npx github:Verificate-Dev/verificate-mcp-quickstart
+VERIFICATE_TOKEN=<your-token> npx github:VerificateAI/verificate-mcp-quickstart
 ```
 
 Or with Docker:

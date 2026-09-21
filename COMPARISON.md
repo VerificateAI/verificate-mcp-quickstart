@@ -53,5 +53,5 @@ multiple baselines (GPT/Claude/Gemini), more categories and an LLM-judge is in p
 
 ---
 
-**Try it — no signup:** `npx github:Verificate-Dev/verificate-mcp-quickstart` · remote:
+**Try it — no signup:** `npx github:VerificateAI/verificate-mcp-quickstart` · remote:
 `https://mcp.verificate.ai/mcp` · docs: verificate.ai/mcp

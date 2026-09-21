@@ -1,6 +1,6 @@
 # Install Verificate — in your language
 
-**The merge gate for AI-written code.** 17 deterministic reality gates + a frontier-model review, with veto power — it rejects mocked code, invented APIs, and false "it's done" claims before they reach your codebase. Free to try: **25 validations per machine, no signup.**
+**The merge gate for AI-written code.** 17 deterministic reality gates + a frontier-model review, with veto power — it rejects mocked code, invented APIs, and false "it's done" claims before they reach your codebase. Free to try: **100 validations per machine, no signup.**
 
 One line in Claude Code:
 ```bash
@@ -20,19 +20,19 @@ claude mcp add --transport http verificate https://mcp.verificate.ai/mcp
 ```
 
 ### Português (Brasil)
-Seu assistente de IA escreve um mock e diz que "está pronto", inventa uma chamada de SDK que não existe, ou entrega um loop N+1 que quebra sob carga. O **Verificate** pega os três antes de você aceitar o diff. Grátis, sem cadastro — 25 validações por máquina.
+Seu assistente de IA escreve um mock e diz que "está pronto", inventa uma chamada de SDK que não existe, ou entrega um loop N+1 que quebra sob carga. O **Verificate** pega os três antes de você aceitar o diff. Grátis, sem cadastro — 100 validações por máquina.
 ```
 claude mcp add --transport http verificate https://mcp.verificate.ai/mcp
 ```
 
 ### Bahasa Indonesia
-Asisten AI Anda menulis kode tiruan (mock) lalu mengklaim "selesai", memanggil API yang tidak ada, atau membuat loop N+1 yang jebol saat beban tinggi. **Verificate** menangkap ketiganya sebelum masuk ke basis kode Anda. Gratis, tanpa daftar — 25 validasi per mesin.
+Asisten AI Anda menulis kode tiruan (mock) lalu mengklaim "selesai", memanggil API yang tidak ada, atau membuat loop N+1 yang jebol saat beban tinggi. **Verificate** menangkap ketiganya sebelum masuk ke basis kode Anda. Gratis, tanpa daftar — 100 validasi per mesin.
 ```
 claude mcp add --transport http verificate https://mcp.verificate.ai/mcp
 ```
 
 ### Español
-Tu asistente de IA escribe un mock y lo da por "hecho", inventa una llamada de SDK que no existe, o entrega un bucle N+1 que se cae bajo carga. **Verificate** detecta los tres antes de que aceptes el diff. Gratis, sin registro — 25 validaciones por máquina.
+Tu asistente de IA escribe un mock y lo da por "hecho", inventa una llamada de SDK que no existe, o entrega un bucle N+1 que se cae bajo carga. **Verificate** detecta los tres antes de que aceptes el diff. Gratis, sin registro — 100 validaciones por máquina.
 ```
 claude mcp add --transport http verificate https://mcp.verificate.ai/mcp
 ```

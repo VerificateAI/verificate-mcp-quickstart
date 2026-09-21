@@ -11,7 +11,7 @@ pip install langchain-mcp-adapters langgraph langchain-openai
 python verificate_guardrail.py
 ```
 
-**25 free validations per machine — no signup, no token.** After that, `export VERIFICATE_TOKEN=...` (30-day trial, no card: https://verificate.ai/auth/signup).
+**100 free validations per machine — no signup, no token.** After that, `export VERIFICATE_TOKEN=...` (30-day trial, no card: https://verificate.ai/auth/signup).
 
 ## The 10-line version
 
@@ -32,4 +32,4 @@ tools = await client.get_tools()          # validate_ai_output, validate_plan, a
 A tool an agent *may* call is one it skips under pressure. A **graph node** the output must pass through is deterministic — the veto is structural, not optional. That's the LangGraph way, and it's exactly what a veto gate needs.
 
 Privacy: code is analyzed, never executed, never trained on. https://verificate.ai/privacy
-Main repo (all clients + one-click installs): https://github.com/Verificate-Dev/verificate-mcp-quickstart
+Main repo (all clients + one-click installs): https://github.com/VerificateAI/verificate-mcp-quickstart
