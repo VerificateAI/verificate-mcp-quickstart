@@ -1,0 +1,19 @@
+{
+  "name": "verificate",
+  "description": "Verificate Gate for Claude Code: the merge gate for AI-written code (skill + remote MCP server, no signup needed to start).",
+  "owner": {
+    "name": "Verificate Pty Ltd",
+    "url": "https://verificate.ai"
+  },
+  "plugins": [
+    {
+      "name": "verificate",
+      "source": "./",
+      "description": "Agentic code review with veto power: 17 deterministic reality gates + frontier-model deep review gate every AI-written change before it ships.",
+      "version": "1.8.8",
+      "homepage": "https://verificate.ai/gate/",
+      "license": "MIT",
+      "category": "code-review"
+    }
+  ]
+}

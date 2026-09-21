@@ -75,6 +75,13 @@ Every machine gets **100 free validations** — no account, no card, no key. Add
 claude mcp add --transport http verificate https://mcp.verificate.ai/mcp
 ```
 
+Or install it as a **Claude Code plugin** (adds the MCP server *and* the `verificate` skill, so Claude gates its own work before presenting it):
+
+```
+/plugin marketplace add VerificateAI/verificate-mcp-quickstart
+/plugin install verificate@verificate
+```
+
 **Cursor / VS Code — one-click install:**
 
 [![Add Verificate to Cursor](https://img.shields.io/badge/Cursor-Add_Verificate_%E2%80%94_25_free_calls-111111?labelColor=8CCB43)](https://cursor.com/en/install-mcp?name=verificate&config=eyJ1cmwiOiJodHRwczovL21jcC52ZXJpZmljYXRlLmFpL21jcCJ9)
