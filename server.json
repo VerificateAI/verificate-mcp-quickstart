@@ -1,13 +1,13 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "ai.verificate/mcp",
-  "description": "Agentic code review, no signup to try: reality gates + frontier-model review, with veto.",
+  "description": "Merge gate for AI-written code: deterministic vetoes plus a Claude Haiku 5.5 review. No signup.",
   "title": "Verificate MCP",
   "repository": {
     "url": "https://github.com/VerificateAI/verificate-mcp-quickstart",
     "source": "github"
   },
-  "version": "1.8.8",
+  "version": "1.9.0",
   "websiteUrl": "https://verificate.ai/mcp",
   "remotes": [
     {

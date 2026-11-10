@@ -19,7 +19,7 @@ listings. Form-based directories need an account login (GitHub OAuth) — paste 
 **Description (long):**
 Verificate Gate runs the review pass engineers still do by hand on every AI output. Deterministic reality
 gates run first and have veto power: placeholder/mock implementations presented as finished, reward-gamed
-tests, and unsupported "it's done, all tests pass" completion claims. A frontier-model review then checks
+tests, and unsupported "it's done, all tests pass" completion claims. A Claude Haiku 5.5 review then checks
 for calls to APIs that do not exist and grades correctness, security, performance and maintainability and returns a fix
 plan. If the review cannot run, the gate fails closed instead of approving. Works in Claude Code, Cursor,
 VS Code, Windsurf and any MCP client; the same engine gates pull requests through the GitHub Marketplace

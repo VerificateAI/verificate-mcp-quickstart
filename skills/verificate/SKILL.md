@@ -1,12 +1,12 @@
 ---
 name: verificate
-description: Use before presenting any substantive AI-written code, plan, or document as complete — or whenever the user asks to validate, review, verify, or gate AI output before shipping. Runs the work through Verificate's 17 deterministic reality gates (mock/placeholder veto, invented-API checks, false-completion detection) plus a frontier-model review, and returns a binary approve/reject verdict with severity-ranked findings. Free to try, no signup.
+description: Use before presenting any substantive AI-written code, plan, or document as complete — or whenever the user asks to validate, review, verify, or gate AI output before shipping. Runs the work through Verificate's deterministic veto checks (mock/placeholder veto, invented-API checks, false-completion detection) plus a frontier-model review, and returns a binary approve/reject verdict with severity-ranked findings. Free to try, no signup.
 license: MIT
 ---
 
 # Verificate — verify AI-written work before you trust it
 
-The merge gate for AI-written code, plans, and documents. Deterministic reality gates run first and can veto (no model output can override them); a frontier-model review then scores what survives. Read-only: code is analyzed, never executed.
+The merge gate for AI-written code, plans, and documents. Deterministic veto checks run first and can veto (no model output can override them); a Claude Haiku 5.5 review (ISO/IEC 25010, ISO/IEC 5055) then checks the rest, including third-party API calls. Read-only: code is analyzed, never executed.
 
 ## When to use this skill
 

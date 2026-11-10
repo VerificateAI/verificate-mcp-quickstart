@@ -1,6 +1,6 @@
 # Install Verificate — in your language
 
-**The merge gate for AI-written code.** 17 deterministic reality gates + a frontier-model review, with veto power — it rejects mocked code, invented APIs, and false "it's done" claims before they reach your codebase. Free to try: **100 validations per machine, no signup.**
+**The merge gate for AI-written code.** deterministic veto checks and a Claude Haiku 5.5 review, with veto power — it rejects mocked code, invented APIs, and false "it's done" claims before they reach your codebase. Free to try: **100 validations per machine, no signup.**
 
 One line in Claude Code:
 ```bash

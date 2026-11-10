@@ -9,17 +9,25 @@
 
 <p align="center"><em>Real output from the live server: 12 lines of AI-written payment code — rejected, fixed, approved, in seconds.</em></p>
 
-**You vibe-coded the demo. This ships it.** Between a working demo and a launched product used to stand an experienced CTO and a senior dev team — the people who catch the mock refund path, the invented SDK call, the loop that dies at real traffic. Verificate MCP is that review team as an MCP server: **17 deterministic reality gates with veto power**, fused with a **frontier-model enterprise review** (ISO/IEC 25010: performance, scalability, reliability), run on every AI-written change before it reaches your codebase. The AI writes; the gate holds the bar; you ship. Hosted, zero-install, binary verdict in seconds — in Claude Code, Cursor, Windsurf or any MCP client.
+**You vibe-coded the demo. This ships it.** Between a working demo and a launched product used to stand an experienced CTO and a senior dev team — the people who catch the mock refund path, the invented SDK call, the loop that dies at real traffic. Verificate MCP is that review team as an MCP server: **deterministic veto checks** (placeholders and mocks, reward-gamed tests, invented standard-library APIs, secrets written to logs, deceptive or evidence-free claims), then a **Claude Haiku 5.5 review** against ISO/IEC 25010 and ISO/IEC 5055, run on every AI-written change before it reaches your codebase. Every verdict comes with a receipt. The AI writes; the gate holds the bar; you ship. Hosted, zero-install, binary verdict in seconds — in Claude Code, Cursor, Windsurf or any MCP client.
 
-**Not another linter wrapper.** The code-quality shelf on every MCP directory is two things: scanners (ESLint, Semgrep and SonarQube bridges — deterministic rules, no judgment) and prompt relays that pipe your repo to your own LLM key (self-review with extra steps). Verificate is neither: the gates hold veto power that no model output can override.
+**Not another linter wrapper.** The code-quality shelf on every MCP directory is two things: scanners (ESLint, Semgrep and SonarQube bridges — deterministic rules, no judgment) and prompt relays that pipe your repo to your own LLM key (self-review with extra steps). Verificate is neither: its deterministic checks hold a veto that no model output can override.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-8CCB43.svg)](LICENSE)
 [![Official MCP Registry](https://img.shields.io/badge/MCP_Registry-ai.verificate%2Fmcp-blue)](https://registry.modelcontextprotocol.io/v0/servers?search=verificate)
 [![Docker MCP Registry](https://img.shields.io/badge/Docker_MCP-PR_%234551-2496ED)](https://github.com/docker/mcp-registry/pull/4551)
 [![MCP Market](https://img.shields.io/badge/MCP_Market-verificate-8A2BE2)](https://mcpmarket.com/server/verificate)
-[![Free trial](https://img.shields.io/badge/Free_trial-30_days,_no_card-8CCB43)](https://verificate.ai/auth/signup)
+[![Free](https://img.shields.io/badge/Free-100_validations,_no_signup-8CCB43)](#quick-start--no-signup-no-token-30-seconds)
 
 Your coding assistant writes a mock and calls it done. It invents an SDK call that doesn't exist. It ships an N+1 loop that passes every test and dies under load. Verificate MCP runs the deep review pass on every AI output — deterministic reality gates first (any one can veto), then an enterprise-grade review scores what survives — **before the code reaches your codebase**.
+
+## New in November 2026
+
+- **A stronger reviewer.** The model stage now runs on Claude Haiku 5.5. On our frozen benchmark (12 cases, each reviewed 3 times), unsafe approvals went from **6 in 36 to 0 in 36**, with all 12 clean controls still approved. [Method and numbers](BENCHMARK_2026-11.md).
+- **Secrets in logs are now a deterministic veto.** Passing a password, API key, access token or access code to a log or console call fails the review in Python, JS/TS, Java, Go, Rust, C#, PHP, Ruby, Swift and Kotlin (CWE-532). Logging that a key is present, its length or a fingerprint is fine.
+- **Invented standard-library calls are a deterministic veto** (for example `os.read_text`). Third-party SDK calls are checked by the model review.
+- **One decision and a receipt.** Every response carries one final `decision`, the model's unmodified opinion beside it, and a receipt: input and prompt hashes, prompt and policy versions, the model, whether the review was complete, and what was not verified. A review that cannot cover the scope says so and is never an approval.
+- **Used hard in our own engineering.** 3,844 Gate reviews across 54 of our own projects between 7 October and 10 November 2026; 943 were rejected and sent back for fixes.
 
 ## A real rejection (verbatim)
 
@@ -35,35 +43,37 @@ Each of those is an afternoon of production debugging, caught in seconds.
 
 A frontier model asked *"is this OK to merge?"* in a natural workflow missed reward-gaming (a test
 that only does `assert True`) and a hallucinated API (`stripe.Refund.create_partial`) in **0 of 6
-runs each**. Verificate's gate caught both **6 of 6 — deterministically**, with **0 false positives**
-on clean code.
+runs each**. Verificate's gate caught both **6 of 6**, with **0 false positives** on clean code. The
+reward-gamed test is a deterministic veto; the invented third-party SDK call was caught by the model
+review stage.
 
 | Adversarial case | LLM review alone | **Verificate gate** |
 |---|---|---|
 | Reward-gaming (`assert True` test) | 0 / 6 | **6 / 6** |
 | Hallucinated API (nonexistent SDK call) | 0 / 6 | **6 / 6** |
 
-**Battle-tested:** 2,581 audited validations over 5 weeks (66 rejected, 270 flagged unfit),
-including guarding the write-path of a **21M-entity source-cited knowledge base** (98.6% cited,
-100% licensed across 268 sources). Reproduce it: [`scripts/`](scripts/) · full write-up: [`COMPARISON.md`](COMPARISON.md).
+That benchmark is from September 2026. The November frozen A/B (36 reviews, 6 unsafe approvals → 0)
+is in [`BENCHMARK_2026-11.md`](BENCHMARK_2026-11.md). Reproduce the September run: [`scripts/`](scripts/) ·
+full write-up: [`COMPARISON.md`](COMPARISON.md).
 
 ## Tools
 
-Each tool has one job — two gates that return verdicts, one advisor that doesn't, one generator:
+Each tool has one job — three gates that return verdicts, one advisor that doesn't, one generator:
 
 | Tool | Job | Returns |
 |---|---|---|
-| `validate_ai_output` | **The merge gate for AI-written code.** Deterministic reality gates (mock/placeholder veto, gaming & bypass detection, invented-API checks) run first and can't be overridden; ISO/IEC 25010 review scores what survives. | Binary **approve/reject** verdict + severity-ranked findings |
+| `validate_ai_output` | **The merge gate for AI-written code and documents.** Deterministic veto checks (placeholders and mocks, reward-gamed tests, invented standard-library APIs, secrets in logs) run first and can't be overridden; a Claude Haiku 5.5 review (ISO/IEC 25010, ISO/IEC 5055) then checks the rest, including third-party API calls. | One **decision** (approved / approved with conditions / rejected / incomplete) + severity-ranked findings + a receipt |
 | `validate_plan` | **The gate for plans and designs**, before any code exists — completeness, feasibility, scalability implications, risk. The cheapest place to catch a bad design. | Binary **approve/reject** verdict + findings |
+| `validate_artifact` | **The gate for a deployable**: every critical component present and loading, imports resolving, dependencies declared, health checks that really fail closed. | Binary **approve/reject** verdict + fix plan |
 | `analyze_code` | **Advisory deep-dive** on existing code — hot paths, rate-limit math, failure modes, tech debt. Use it to understand a rejection or review inherited code. | Scores + findings, deliberately **no verdict** |
-| `generate_code` | **Generate + gate in one step** — the LLM writes it, the same protection engine vets it before you see it. | Gated code (no placeholders, no invented APIs) |
+| `generate_code` | **Generate + gate in one step** — the LLM writes it, the same checks vet it before you see it. | Gated code, with the verdict |
 
 ### Beyond tools
 
 The server also ships **prompts** and **resources** for a richer client experience:
 
 - Prompts `gate_my_changes` / `review_my_plan` — one-click workflows that loop validate → fix → re-validate until approved.
-- Resources `verificate://gates` (what each of the 17 deterministic gates watches for) and `verificate://example-verdict` (a verbatim production rejection).
+- Resources `verificate://gates` (each deterministic check, the model review stage, and what is not run on the hosted gate) and `verificate://example-verdict` (a verbatim production rejection).
 
 ## Quick start — no signup, no token, 30 seconds
 
@@ -84,7 +94,7 @@ Or install it as a **Claude Code plugin** (adds the MCP server *and* the `verifi
 
 **Cursor / VS Code — one-click install:**
 
-[![Add Verificate to Cursor](https://img.shields.io/badge/Cursor-Add_Verificate_%E2%80%94_25_free_calls-111111?labelColor=8CCB43)](https://cursor.com/en/install-mcp?name=verificate&config=eyJ1cmwiOiJodHRwczovL21jcC52ZXJpZmljYXRlLmFpL21jcCJ9)
+[![Add Verificate to Cursor](https://img.shields.io/badge/Cursor-Add_Verificate_%E2%80%94_100_free_validations-111111?labelColor=8CCB43)](https://cursor.com/en/install-mcp?name=verificate&config=eyJ1cmwiOiJodHRwczovL21jcC52ZXJpZmljYXRlLmFpL21jcCJ9)
 [![Add to VS Code](https://img.shields.io/badge/VS_Code-Add_Verificate-0078d7?labelColor=8CCB43)](https://vscode.dev/redirect/mcp/install?name=verificate&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmcp.verificate.ai%2Fmcp%22%7D)
 [![Add to VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-Add_Verificate-24bfa5?labelColor=8CCB43)](https://insiders.vscode.dev/redirect/mcp/install?name=verificate&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmcp.verificate.ai%2Fmcp%22%7D)
 
@@ -105,7 +115,7 @@ Or install it as a **Claude Code plugin** (adds the MCP server *and* the `verifi
 
 Cursor: `~/.cursor/mcp.json`. Windsurf: `~/.codeium/windsurf/mcp_config.json`.
 
-Then ask your assistant to *"validate this function with verificate"* — a structured verdict comes back in seconds, and every free-tier response shows how many validations you have left and what the gate has caught for you.
+Then ask your assistant to *"validate this function with verificate"* — a structured verdict comes back in seconds (typically 5–25 s).
 
 ### Keep going after the free 100
 
@@ -135,19 +145,22 @@ One-paste setup prompts that install these rules for you: [PROMPTS.md](PROMPTS.m
 ## How it decides
 
 ```text
-AI output ──► Reality gates (deterministic, any one vetoes)
-              • mock/placeholder in the wire path
-              • invented/hallucinated APIs
-              • claimed-complete without proof
-              • gaming & bypass detection
-                       │ survivors only
-                       ▼
-              Enterprise review (ISO/IEC 25010 + MLOps)
-              performance · scalability · reliability · tech debt
+AI output ──► Deterministic veto checks (same input, same result)
+              • mock/placeholder presented as done
+              • reward-gamed tests
+              • invented standard-library APIs
+              • secrets written to logs (CWE-532)
+              • deceptive or evidence-free claims
                        │
                        ▼
-              Verdict: score /100 + severity-ranked findings
-              (REJECTED = agent fixes findings and re-validates)
+              Claude Haiku 5.5 review (ISO/IEC 25010 + ISO/IEC 5055)
+              security · reliability · performance · maintainability
+              third-party API reality · high/critical L0/L2 findings block
+                       │
+                       ▼
+              One decision + findings + receipt
+              (rejected = agent fixes findings and re-validates;
+               incomplete = the review could not cover the scope, never an approval)
 ```
 
 The two stages are deliberately separate: if reality and quality were blended into one score, a beautifully structured function that fakes its refund path could still average out to "acceptable." A veto architecture makes that impossible.
@@ -162,9 +175,9 @@ Everything else on the MCP code-quality shelf is free — and that's fair, becau
 | **BYO-key review relays** | Your repo + a review prompt, piped to your own OpenAI/Anthropic key. | Self-review with extra steps: the reviewer shares the generator's blind spots, there are no deterministic gates underneath, and whatever the model says goes. You maintain keys, versions and hosting. |
 | **A bigger model** | Hope the generator reviews itself better. | Self-review inherits self-blindness. An external gate holds the same bar for every model — which also makes **smaller, cheaper models safe to ship with**: same gate either way. |
 | **Human review of every AI diff** | The gold standard, at human speed. | Doesn't scale at AI generation speed. The gate does the first pass in seconds; humans review verdicts, not raw diffs. |
-| **Verificate MCP** | Deterministic reality gates **with veto**, then a frontier-model enterprise review — fused into one binary verdict. Hosted, always on the current model. | — |
+| **Verificate MCP** | Deterministic checks **with veto**, then a Claude Haiku 5.5 review — fused into one decision with a receipt. Hosted. | — |
 
-That second layer is the part you pay for: a frontier agent doing the deep review — production arithmetic, failure modes, SDK reality — with a deterministic floor under it that the agent itself cannot argue away.
+That second layer is the part you pay for: a model doing the deep review — production arithmetic, failure modes, SDK reality — with a deterministic floor under it that the model itself cannot argue away.
 
 ## Run locally (stdio bridge)
 
@@ -181,7 +194,7 @@ docker build -t verificate-mcp .
 docker run -i -e VERIFICATE_TOKEN=<your-token> verificate-mcp
 ```
 
-Without `VERIFICATE_TOKEN`, introspection still works and tool calls return instructions for getting a trial token.
+Without `VERIFICATE_TOKEN`, tool calls use the free tier (100 validations, no signup).
 
 ## FAQ
 
@@ -191,13 +204,13 @@ Without `VERIFICATE_TOKEN`, introspection still works and tool calls return inst
 
 **Can it block my agent?** Yes — that's the point. A REJECTED verdict is designed to send the agent back to fix findings instead of presenting broken work. Your standing rule decides how hard the stop is.
 
-**What about false positives?** Verdicts come with specific findings and the math, so they're auditable in seconds — you're never asked to trust a bare score.
+**What about false positives?** Verdicts come with specific findings and the math, so they're auditable in seconds — you're never asked to trust a bare score. The new secrets-in-logs check was measured on 34,849 real third-party source files before launch: it flagged 5 lines, all genuine password or credential logging.
 
 ## Security & privacy
 
-- Requests are authenticated with your personal token; keys are single-user and rate-limited, with key-sharing detection.
-- Code is processed to produce the verdict and is not used to train models.
-- `initialize`/`tools/list` are public (so clients and directories can introspect); every `tools/call` requires your key.
+- Without a key, each machine (or, in CI, each repository) gets 100 free validations. With a key, calls draw on your own quota; keys are single-user and rate-limited.
+- Submitted code is read, never executed. It is processed to produce the verdict and is not used to train models.
+- `initialize`/`tools/list` are public, so clients and directories can introspect the server.
 
 ## Pricing
 
@@ -219,8 +232,8 @@ Built by [Verificate Pty Ltd](https://verificate.ai) (Sydney, Australia) — an 
 
 This repo (the stdio bridge, client configs and CI examples) is **MIT** — use it freely.
 The Verificate validation engine and hosted gateway it talks to are a **commercial service**
-(30-day free trial, then subscription): the 17 protection gates and the frontier-model review
-run server-side and are not part of this repository.
+(30-day free trial, then subscription): the deterministic checks and the model review run
+server-side and are not part of this repository.
 
 <!-- glama-ai-listing -->
 ## Glama

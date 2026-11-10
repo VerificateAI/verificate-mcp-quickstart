@@ -1,7 +1,7 @@
 {
   "name": "verificate-mcp",
-  "version": "1.8.8",
-  "description": "Verificate MCP stdio bridge — validation gates for AI coding (reality checks with veto + ISO/IEC 25010 review), forwarding to the hosted Verificate gateway.",
+  "version": "1.9.0",
+  "description": "Verificate MCP stdio bridge — merge gate for AI coding (deterministic veto checks + Claude Haiku 5.5 review, ISO/IEC 25010 and ISO/IEC 5055), forwarding to the hosted Verificate gateway.",
   "bin": { "verificate-mcp": "index.js" },
   "main": "index.js",
   "type": "commonjs",

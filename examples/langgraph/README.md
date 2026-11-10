@@ -1,6 +1,6 @@
 # Verificate for LangChain / LangGraph
 
-A **veto gate for AI-written code**, as a LangGraph node. Your agent writes code; this node runs it through the hosted [Verificate MCP server](https://mcp.verificate.ai/mcp) — 17 deterministic reality gates + a frontier-model review — and routes a **REJECTED** verdict back to a fix loop instead of letting a mocked refund path or an invented SDK call reach your user.
+A **veto gate for AI-written code**, as a LangGraph node. Your agent writes code; this node runs it through the hosted [Verificate MCP server](https://mcp.verificate.ai/mcp) — deterministic veto checks + a frontier-model review — and routes a **REJECTED** verdict back to a fix loop instead of letting a mocked refund path or an invented SDK call reach your user.
 
 An agent that ships confident-but-wrong code loses its user's trust. This is the safety net that keeps it shipping.
 
