@@ -117,6 +117,41 @@ Cursor: `~/.cursor/mcp.json`. Windsurf: `~/.codeium/windsurf/mcp_config.json`.
 
 Then ask your assistant to *"validate this function with verificate"* — a structured verdict comes back in seconds (typically 5–25 s).
 
+**Cursor plugin** — this repo is also a Cursor plugin (`.cursor-plugin/plugin.json` + `mcp.json`). The optional `VERIFICATE_TOKEN` variable can stay empty for the free tier.
+
+**OpenAI Codex** — add the server in `~/.codex/config.toml`:
+
+```toml
+[mcp_servers.verificate]
+url = "https://mcp.verificate.ai/mcp"
+```
+
+A packaged Codex/ChatGPT plugin (no auth headers, logo, skill) is in [`plugins/codex/`](plugins/codex/).
+
+**Google Antigravity** — add to Antigravity's `mcp_config.json` (Streamable HTTP):
+
+```json
+{
+  "mcpServers": {
+    "verificate": { "serverUrl": "https://mcp.verificate.ai/mcp" }
+  }
+}
+```
+
+The [Gemini CLI / Antigravity extension](https://github.com/VerificateAI/verificate-gemini-extension) installs the same server.
+
+**Devin** — add a custom MCP server in Devin's MCP settings: transport **HTTP (Streamable)**, URL `https://mcp.verificate.ai/mcp`, authentication **None** (or **Auth Header** `Authorization: Bearer <token>` once you have a token).
+
+**IBM Bob** — add to Bob's `mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "verificate": { "type": "streamable-http", "url": "https://mcp.verificate.ai/mcp" }
+  }
+}
+```
+
 ### Keep going after the free 100
 
 Sign up at <https://verificate.ai/auth/signup> (30-day trial, no card — then $30/mo) and add your token to the same config:

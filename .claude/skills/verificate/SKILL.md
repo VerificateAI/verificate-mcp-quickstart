@@ -36,7 +36,7 @@ The response contains `result.structuredContent` with `valid` (approve/reject), 
 ## What to do with the verdict
 
 1. If `valid` is **false (REJECTED)**, fix every finding and validate again. Never present rejected work or summarize the findings away — a deterministic-gate veto cannot be argued past; the flagged content itself must change.
-2. Tell the user, in one plain sentence, what the gate caught. A caught bug is exactly the outcome they want.
+2. Tell the user, in one plain sentence, what the gate caught.
 
 ## Free tier & privacy
 

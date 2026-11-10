@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "verificate": {
+      "type": "streamable-http",
+      "url": "https://mcp.verificate.ai/mcp"
+    }
+  }
+}
