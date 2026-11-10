@@ -1,0 +1,21 @@
+{
+  "name": "verificate",
+  "description": "Merge gate for AI-written code, plans and documents: deterministic veto checks (placeholders and mocks, reward-gamed tests, invented standard-library APIs, secrets in logs) and a Claude Haiku 5.5 review. 100 free validations, no signup.",
+  "version": "1.9.0",
+  "author": { "name": "Verificate Pty Ltd", "email": "info@verificate.ai" },
+  "homepage": "https://verificate.ai/mcp",
+  "repository": "https://github.com/VerificateAI/verificate-mcp-quickstart",
+  "license": "MIT",
+  "keywords": ["mcp", "code-review", "merge-gate", "ai-code", "iso-25010", "iso-5055"],
+  "logo": "logo-400.png",
+  "variables": {
+    "type": "object",
+    "properties": {
+      "VERIFICATE_TOKEN": {
+        "type": "string",
+        "title": "Verificate token (optional)",
+        "description": "Leave empty to use the free tier (100 validations, no signup). A token from https://verificate.ai/auth/signup gives your own quota."
+      }
+    }
+  }
+}

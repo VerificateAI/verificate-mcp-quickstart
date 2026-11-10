@@ -1,0 +1,22 @@
+{
+  "name": "verificate",
+  "version": "1.9.0",
+  "description": "Merge gate for AI-written code, plans and documents: deterministic veto checks and a Claude Haiku 5.5 review, with one decision and a receipt per verdict.",
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Verificate Gate",
+    "shortDescription": "Review AI-written code before you ship it",
+    "longDescription": "Verificate Gate reviews AI-written code, plans and documents. Deterministic checks run first and can veto: placeholder or mock implementations, tests that cannot fail, Python standard-library calls that do not exist, secrets written to logs and unsupported completion claims. A Claude Haiku 5.5 review then checks the rest against ISO/IEC 25010 and ISO/IEC 5055, including whether third-party API calls are real. Each result has one decision (approved, approved with conditions, rejected or incomplete), findings with severities and a receipt. Submitted content is read, never executed. 100 free validations, no signup.",
+    "developerName": "Verificate Pty Ltd",
+    "category": "Developer Tools",
+    "capabilities": ["Read"],
+    "websiteURL": "https://verificate.ai/mcp",
+    "privacyPolicyURL": "https://verificate.ai/privacy/",
+    "termsOfServiceURL": "https://verificate.ai/terms/",
+    "defaultPrompt": ["Validate this change with Verificate before we merge it", "Review this implementation plan with Verificate"],
+    "brandColor": "#8CCB43",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/logo.png"
+  }
+}

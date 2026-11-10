@@ -21,7 +21,7 @@ const GATEWAY =
 const TOKEN = process.env.VERIFICATE_TOKEN || "";
 // Upstream request limit (ms). Default sits above the gateway's own ~90s review deadline.
 const UPSTREAM_TIMEOUT_MS = Math.max(5000, Number(process.env.VERIFICATE_TIMEOUT_MS) || 120000);
-const VERSION = "1.8.7";
+const VERSION = "1.9.0";
 const PROTOCOL_VERSION = "2025-06-18";
 
 // Mirrored from the hosted gateway (tools/list etc.) — regenerate with
@@ -32,6 +32,12 @@ const TOOLS = [
     "name": "validate_artifact",
     "title": "Gate a deployable artifact against the Verificate production doctrine",
     "description": "Deterministic production-readiness gate for AI-built systems. Verifies the invariants that stop a system silently shipping broken: every critical component is PRESENT and LOADS, the import closure resolves (nothing assumed 'already on the box'), all runtime dependencies are declared, and health is a REAL fail-closed check. Returns approve/reject with a fix plan and ISO 27001 / ISO 5055 control evidence. Facts are gathered by the Verificate collector in your CI; the gate is the authority. Non-bypassable, fails closed. This is the control-plane sibling of validate_ai_output — code quality is one invariant; this gates the whole deployable.",
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    },
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -48,7 +54,7 @@ const TOOLS = [
   {
     "name": "validate_ai_output",
     "title": "Gate AI-written output (code or documents)",
-    "description": "The merge gate for ANY AI-written output — code, documentation, reports, emails, configs: returns a binary approve/reject verdict with veto power — e.g. it rejects code calling the nonexistent stripe.Inventory API, an N+1 loop with the latency arithmetic to prove it, or a doc claiming success with no evidence. Deterministic reality gates (mock/placeholder veto, gaming and bypass detection, invented-API checks) run first and cannot be overridden; a frontier-model review (ISO/IEC 25010) then scores quality, accuracy, reliability and tech debt. In a benchmark, a frontier model reviewing alone caught reward-gaming and hallucinated APIs 0/6 times in a natural review workflow; these gates catch them deterministically on every call. Read-only: nothing is executed. Call it on every AI-generated deliverable before accepting it; use validate_plan for plans, analyze_code for an advisory report without a verdict.",
+    "description": "The merge gate for ANY AI-written output — code, documentation, reports, emails, configs: returns a binary approve/reject verdict with veto power — e.g. it rejects code calling the nonexistent stripe.Inventory API, an N+1 loop with the latency arithmetic to prove it, or a doc claiming success with no evidence. Deterministic checks (mock/placeholder veto, reward-gamed tests, standard-library calls that do not exist, secrets written to logs) run first and cannot be overridden; a Claude Haiku 5.5 review (ISO/IEC 25010, ISO/IEC 5055) then verifies third-party API calls and scores quality, accuracy, reliability and tech debt; its high/critical security and API findings block. In a benchmark, a frontier model reviewing alone caught reward-gaming and hallucinated APIs 0/6 times in a natural review workflow; this gate checks for both on every call. Read-only: nothing is executed. Call it on every AI-generated deliverable before accepting it; use validate_plan for plans, analyze_code for an advisory report without a verdict.",
     "annotations": {
       "readOnlyHint": true,
       "destructiveHint": false,
@@ -65,14 +71,23 @@ const TOOLS = [
         "validation_type": {
           "type": "string",
           "default": "code_generation",
-          "description": "What the output is: 'code_generation' (default) for source code; 'documentation', 'report', 'email', 'text', ... for prose (code-marker gates are skipped, integrity gates and the frontier review still run); 'plan' for designs/specs."
+          "description": "What the output is: 'code_generation' (default) for source code; 'documentation', 'report', 'email', 'text', ... for prose (code-marker gates are skipped, integrity gates and the frontier review still run). Use 'report' (or 'status_report' / 'handover') for anything that CLAIMS work is done or passing: there, a completion claim with no evidence in the text is a veto. 'plan' for designs/specs."
         },
         "context": {
           "type": [
             "object",
             "string"
           ],
-          "description": "Optional review context — an object like {\"language\": \"cpp\", \"scale\": \"10k req/s\"} ('language' sharpens SDK-reality checks) or a free-text sentence describing intent."
+          "description": "Optional review context — an object like {\"language\": \"cpp\", \"scale\": \"10k req/s\"} ('language' sharpens SDK-reality checks) or a free-text sentence describing intent. Reviewed in full as untrusted reference data (it cannot instruct the reviewer or lift a veto); an oversized context is refused, never truncated. Put a dispute of a prior finding, with its evidence, in 'rebuttal'."
+        },
+        "expected_input_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-fA-F]{64}$",
+          "description": "Optional SHA-256 (hex) of the exact UTF-8 bytes you intend to submit. A mismatch is refused before any review, proving the gate saw the file you meant."
+        },
+        "previous_receipt_id": {
+          "type": "string",
+          "description": "Optional receipt_id of the review this submission revises or adjudicates; recorded to link the review history."
         }
       },
       "required": [
@@ -84,15 +99,55 @@ const TOOLS = [
       "properties": {
         "valid": {
           "type": "boolean",
-          "description": "The binary verdict: true = approved, false = rejected"
+          "description": "True ONLY when decision is 'approved' or 'approved_with_conditions'. Rejected, incomplete and refused requests are all false."
+        },
+        "decision": {
+          "type": "string",
+          "enum": [
+            "approved",
+            "approved_with_conditions",
+            "rejected",
+            "incomplete",
+            "refused_input"
+          ],
+          "description": "The one final gate decision (see decision_reasons, policy_version)."
+        },
+        "decision_reasons": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          },
+          "description": "Every rule that fired; `decisive` marks the ones that set the decision."
+        },
+        "failure_class": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "input_error | transient_unavailable | incomplete_review | malformed_review | content_defect | deterministic_veto, or null when approved."
+        },
+        "next_action": {
+          "type": "string",
+          "description": "none | address_conditions | fix_and_resubmit | repair_input | retry_later_or_split | supply_missing_scope_or_split | retry_once_then_escalate | blocked_needs_adjudication"
+        },
+        "policy_version": {
+          "type": "string"
+        },
+        "receipt": {
+          "type": "object",
+          "description": "Execution receipt: receipt_id (unique per execution), input_sha256 (SHA-256 of the exact UTF-8 input), context_sha256, request_fingerprint (identifies an equivalent request; NOT an approval token), prompt_sha256 and versions, actual provider/model, completion state, elapsed time, scope reviewed/missing, deferred checks and the audit write outcome."
+        },
+        "model_opinion": {
+          "type": "object",
+          "description": "The model reviewer's own unmodified verdict/score; may differ from decision."
         },
         "score": {
           "type": "number",
-          "description": "Combined score 0-100 (gates fused with the model review)"
+          "description": "Blended 0-100 quality telemetry (gates fused with the model score). Not a probability of correctness and not the decision."
         },
         "confidence": {
           "type": "number",
-          "description": "score / 100"
+          "description": "Legacy alias of score / 100. NOT a calibrated probability or accuracy."
         },
         "issues": {
           "type": "array",
@@ -167,6 +222,15 @@ const TOOLS = [
         "context": {
           "type": "object",
           "description": "Optional constraints the review should weigh, e.g. {\"system\": \"payments API\", \"scale\": \"1M users\", \"constraints\": \"PostgreSQL only\"}."
+        },
+        "expected_input_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-fA-F]{64}$",
+          "description": "Optional SHA-256 (hex) of the exact UTF-8 bytes you intend to submit. A mismatch is refused before any review, proving the gate saw the file you meant."
+        },
+        "previous_receipt_id": {
+          "type": "string",
+          "description": "Optional receipt_id of the review this submission revises or adjudicates; recorded to link the review history."
         }
       },
       "required": [
@@ -178,15 +242,55 @@ const TOOLS = [
       "properties": {
         "valid": {
           "type": "boolean",
-          "description": "The binary verdict: true = approved, false = rejected"
+          "description": "True ONLY when decision is 'approved' or 'approved_with_conditions'. Rejected, incomplete and refused requests are all false."
+        },
+        "decision": {
+          "type": "string",
+          "enum": [
+            "approved",
+            "approved_with_conditions",
+            "rejected",
+            "incomplete",
+            "refused_input"
+          ],
+          "description": "The one final gate decision (see decision_reasons, policy_version)."
+        },
+        "decision_reasons": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          },
+          "description": "Every rule that fired; `decisive` marks the ones that set the decision."
+        },
+        "failure_class": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "input_error | transient_unavailable | incomplete_review | malformed_review | content_defect | deterministic_veto, or null when approved."
+        },
+        "next_action": {
+          "type": "string",
+          "description": "none | address_conditions | fix_and_resubmit | repair_input | retry_later_or_split | supply_missing_scope_or_split | retry_once_then_escalate | blocked_needs_adjudication"
+        },
+        "policy_version": {
+          "type": "string"
+        },
+        "receipt": {
+          "type": "object",
+          "description": "Execution receipt: receipt_id (unique per execution), input_sha256 (SHA-256 of the exact UTF-8 input), context_sha256, request_fingerprint (identifies an equivalent request; NOT an approval token), prompt_sha256 and versions, actual provider/model, completion state, elapsed time, scope reviewed/missing, deferred checks and the audit write outcome."
+        },
+        "model_opinion": {
+          "type": "object",
+          "description": "The model reviewer's own unmodified verdict/score; may differ from decision."
         },
         "score": {
           "type": "number",
-          "description": "Combined score 0-100 (gates fused with the model review)"
+          "description": "Blended 0-100 quality telemetry (gates fused with the model score). Not a probability of correctness and not the decision."
         },
         "confidence": {
           "type": "number",
-          "description": "score / 100"
+          "description": "Legacy alias of score / 100. NOT a calibrated probability or accuracy."
         },
         "issues": {
           "type": "array",
@@ -439,8 +543,8 @@ const PROMPTS = [
 const RESOURCES = [
   {
     "uri": "verificate://gates",
-    "name": "The 17 protection gates",
-    "description": "What each deterministic gate watches for, and why a veto cannot be overridden.",
+    "name": "What runs on every review",
+    "description": "Each deterministic check, what it vetoes, the model review stage, and the checks not run on shared infrastructure.",
     "mimeType": "text/markdown"
   },
   {
@@ -452,7 +556,7 @@ const RESOURCES = [
 ];
 
 const RESOURCE_TEXT = {
-  "verificate://gates": "# The 17 Verificate protection gates\n\nDeterministic reality gates run before any model judgement. Any veto gate can fail a\nsubmission outright — the frontier-model review that follows can lower a score but can\nnever override a gate veto.\n\n| Gate | Watches for |\n|---|---|\n| code_reality_gate | Invented/hallucinated APIs and SDK calls; code that cannot work as written |\n| reality_validation | Claims that don't match what the code actually does |\n| bullshit_detector | Confident-sounding filler and unsupported claims in output |\n| gaming_prevention | Output shaped to pass checks rather than do the work |\n| bypass_detector | Attempts to route around the gate or soften its verdict |\n| integrity_monitor | Inconsistencies between stated intent and implementation |\n| completion_detector | 'Done' claims without proof (tests, deploys, integrations) |\n| anti_simplification | Silent scope-narrowing: the easy 80% presented as the whole task |\n| ai_failure_prevention | Known LLM failure patterns (placeholder/mocked wire paths, TODO stubs) |\n| enhanced_brutal_feedback | Ensures findings are specific and actionable, not vague hedges |\n| enterprise_validation_orchestrator | Sequencing and fusion of gate verdicts with the model review |\n| static_analysis | Structural checks that ground the review in the actual AST |\n| frontend_validation | UI code reality: dead handlers, unbound state, phantom selectors |\n| visual_validation | Rendered-output claims vs what the code can actually render |\n| collaboration_paradigm_enforcer | Agent behaviour: stop-and-ask vs silently guessing |\n| prompt_engineering_validator | Prompt-injection and instruction-conflict detection in inputs |\n| prompt_enhancer | Normalises weak validation requests so the review sees full context |\n\nGate verdicts are deterministic: same input, same verdict, full audit trail.\n\n",
+  "verificate://gates": "# What runs on every Verificate review\n\nDeterministic checks run first. A veto check fails the submission outright: the model review\nthat follows cannot override it. The model review is the second stage, and its high or critical\nsecurity and API-reality findings block too. Every result carries a receipt (input, context and\nprompt hashes, prompt and policy versions, model, completion state) so a verdict can be traced.\n\n## Deterministic veto checks (same input, same result)\n\n| Check | Watches for |\n|---|---|\n| code_reality_gate | Placeholders presented as done: TODO/FIXME bodies, NotImplemented, mocks and stubs, hollow functions, sleep-instead-of-work. Python by AST, other languages by a language-agnostic scanner. |\n| reward-gaming checks (in code_reality_gate) | Tests that cannot fail (`assert True`), returned data that flags itself as a mock, code that detects it is under test. |\n| api_reality (in code_reality_gate) | Python standard-library calls that do not exist (`os.read_text`, removed APIs). |\n| secret_logging | A secret value (password, API key, access token, access code, private key, Authorization header, connection string) passed to a log or console sink, in any mainstream language (CWE-532). Presence checks, lengths and fingerprints are allowed. |\n| integrity_monitor | Deceptive or manipulative claims in comments, docstrings and prose (\"guaranteed to work, no need to test\"). |\n| completion_claim | A report that claims work is done or passing with no evidence in the text (report-type submissions). |\n\n## Recorded signals (not vetoes)\n\n| Check | Watches for |\n|---|---|\n| gaming_prevention | Score-gaming and suspicious-perfection patterns. |\n| bypass_detector | Resubmitting unchanged content, template abuse, fabricated evidence. |\n\n## Model review\n\nA Claude Haiku 5.5 review scores the submission against an ISO/IEC 25010 and ISO/IEC 5055 rubric.\nIt verifies third-party API calls and reports findings as `severity|layer|detail`. A high or critical\nfinding in the security (L2) or API-reality (L0) layer blocks the merge. If the review cannot cover\nthe stated scope it says so (`review_complete: false`), and the verdict is incomplete, never approved.\n\n## Not run on shared infrastructure\n\nChecks that would execute or compile submitted code, or need external linters or live services, are\nnot run on the hosted gate: anti_simplification, completion_detector, bullshit_detector, static_analysis,\nreality_validation. Each response lists them under `gates_deferred`.\n",
   "verificate://example-verdict": "# A real verdict (verbatim from the production gateway)\n\n12 plausible lines of AI-written payment code. Result: REJECTED — 30.8/100,\nvetoed by code_reality_gate. Findings included:\n\n- \"N+1 synchronous API calls ... For 100 items, this results in 100 sequential HTTP\n  roundtrips, taking ~10-20 seconds and blocking the event loop/worker thread ...\n  will trigger Stripe rate limiting (100 req/sec limit).\"\n- \"stripe.Inventory is not a valid Stripe SDK resource.\"\n- \"Floating-point representation issues lead to rounding errors in financial\n  transactions; Stripe API requires integer cents.\"\n\nEach finding is an afternoon of production debugging, caught in seconds.\n\n"
 };
 
@@ -485,7 +589,7 @@ async function upstreamPost(body, extraHeaders = {}) {
     "Content-Type": "application/json",
     Accept: "application/json, text/event-stream",
     // Only send auth when a token is set; without it the gateway serves the
-    // no-signup free tier (25 validations per machine) instead of rejecting.
+    // no-signup free tier (100 validations per machine) instead of rejecting.
     ...(TOKEN ? { Authorization: `Bearer ${TOKEN}` } : {}),
     ...extraHeaders,
   };
@@ -578,7 +682,7 @@ async function handle(msg) {
           capabilities: { tools: { listChanged: true }, prompts: { listChanged: true }, resources: { listChanged: true } },
           serverInfo: { name: "verificate-mcp", version: VERSION },
           instructions:
-            "Validation gates for AI coding. Call validate_ai_output on substantive changes before presenting them as complete; a REJECTED verdict means fix the findings and re-validate. Requires VERIFICATE_TOKEN (30-day free trial: https://verificate.ai/auth/signup).",
+            "Validation gates for AI coding. Call validate_ai_output on substantive changes before presenting them as complete; a REJECTED verdict means fix the findings and re-validate. Without VERIFICATE_TOKEN, calls use the free tier (100 validations, no signup); a token from https://verificate.ai/auth/signup gives your own quota.",
         },
       });
     case "notifications/initialized":
@@ -608,7 +712,7 @@ async function handle(msg) {
     }
     case "tools/call": {
       // No token? Forward anyway — the gateway grants a no-signup free tier
-      // (25 validations/machine) and, when it's used up, returns an upsell that
+      // (100 validations/machine) and, when it's used up, returns an upsell that
       // surfaces inline in the client. A token lifts the cap to the full plan.
       try {
         return send(await forwardToolCall(id, params));

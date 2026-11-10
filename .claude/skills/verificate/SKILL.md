@@ -1,12 +1,12 @@
 ---
 name: verificate
-description: Use before presenting any substantive AI-written code, plan, or document as complete — or whenever the user asks to validate, review, verify, or gate AI output before shipping. Runs the work through Verificate's 17 deterministic reality gates (mock/placeholder veto, invented-API checks, false-completion detection) plus a frontier-model review, and returns a binary approve/reject verdict with severity-ranked findings. Free to try, no signup.
+description: Use before presenting any substantive AI-written code, plan, or document as complete — or whenever the user asks to validate, review, verify, or gate AI output before shipping. Runs the work through Verificate's deterministic veto checks (mock/placeholder veto, invented-API checks, false-completion detection) plus a frontier-model review, and returns a binary approve/reject verdict with severity-ranked findings. Free to try, no signup.
 license: MIT
 ---
 
 # Verificate — verify AI-written work before you trust it
 
-The merge gate for AI-written code, plans, and documents. Deterministic reality gates run first and can veto (no model output can override them); a frontier-model review then scores what survives. Read-only: code is analyzed, never executed.
+The merge gate for AI-written code, plans, and documents. Deterministic veto checks run first and can veto (no model output can override them); a Claude Haiku 5.5 review (ISO/IEC 25010, ISO/IEC 5055) then checks the rest, including third-party API calls. Read-only: code is analyzed, never executed.
 
 ## When to use this skill
 
@@ -36,11 +36,11 @@ The response contains `result.structuredContent` with `valid` (approve/reject), 
 ## What to do with the verdict
 
 1. If `valid` is **false (REJECTED)**, fix every finding and validate again. Never present rejected work or summarize the findings away — a deterministic-gate veto cannot be argued past; the flagged content itself must change.
-2. Tell the user, in one plain sentence, what the gate caught. A caught bug is exactly the outcome they want.
+2. Tell the user, in one plain sentence, what the gate caught.
 
 ## Free tier & privacy
 
-**25 validations per machine, no signup, no card, no token.** After that, add `Authorization: Bearer <token>` (30-day trial at https://verificate.ai/auth/signup). Code is analyzed, never executed, never used to train models. Privacy: https://verificate.ai/privacy
+**100 validations per machine, no signup, no card, no token.** After that, add `Authorization: Bearer <token>` (30-day trial at https://verificate.ai/auth/signup). Code is analyzed, never executed, never used to train models. Privacy: https://verificate.ai/privacy
 
 A real rejection (verbatim): *"`stripe.Inventory.update` does not exist in the Stripe SDK — immediate AttributeError"* · *"refund path is mocked — no money moves"* · score 30/100.
 

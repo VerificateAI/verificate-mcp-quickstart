@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "verificate": {
+      "url": "https://mcp.verificate.ai/mcp",
+      "headers": {
+        "Authorization": "Bearer ${VERIFICATE_TOKEN}"
+      }
+    }
+  }
+}
